@@ -1,0 +1,6 @@
+In Mongo DB, we see _id property as ObjectID("njsndjansd")
+
+The reason for this is that the _id is a binary of 12 bytes length, and converting it to a string would mean doubling its data size (to 24 bytes)
+(this can be checked by _id.id.toHexString().length)
+
+That's why the id is enclosed as ObjectID function
