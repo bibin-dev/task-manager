@@ -6,3 +6,23 @@ The reason for this is that the _id is a binary of 12 bytes length, and converti
 That's why the id is enclosed as ObjectID function
 
 Mongoose JS is an ODM (Object Document Mapper)
+
+---
+
+REST (REpresentational State Transfer) API
+~~
+
+We fetch data using HTTP requests.
+They're of two types - GET and POST (sent with a JSON Request)
+
+In both cases, we get a JSON response
+
+Each API is defined by a HTTP method and a path (of the resource)
+eg. CREATE API with a POST method to /tasks
+
+READ API with a GET method to /tasks
+READ API with a GET method to /tasks/:id (for specific task with the specified ID)
+
+UPDATE API with a PATCH method to /tasks/:id
+
+DELETE API with a DELETE method to /tasks/:id
