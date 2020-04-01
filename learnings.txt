@@ -4,3 +4,5 @@ The reason for this is that the _id is a binary of 12 bytes length, and converti
 (this can be checked by _id.id.toHexString().length)
 
 That's why the id is enclosed as ObjectID function
+
+Mongoose JS is an ODM (Object Document Mapper)
