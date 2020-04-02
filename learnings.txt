@@ -29,9 +29,45 @@ DELETE API with a DELETE method to /tasks/:id
 
 -----
 
+Static methods are accessible on the models
+eg.
+Definition = userSchema.statics.findByCredentials()
+Call = User.findByCredentials
+
+Other methods are accessible on the model instance
+eg.
+Definition = userSchema.methods.findByCredentials()
+Call = user.findByCredentials
+
+-----
+
 bcrypt.js - tool for password encryption
 Hash password using bcrypt.hash(passwordString, hashCount)
 the hashCount can be set to 8
 
 compare if a password matches with the hashed value using 
 bcrypt.compare(passwordString, hashedPasswordString)
+
+-----
+
+JSON Web Token
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJhYmMxMjM0NSIsImlhdCI6MTU4NTgzMjE4N30.DANRmyIrslQX4MGXpnyTvVwArs9fERFKdAC-y8hSWj8
+three parts - 
+1. Header/Metadata
+2. Payload/Data
+3. Signature (used in verification)
+
+all 3 are separated by a dot(.)
+
+we can verify the generated token with jwt.verify(jwtToken, secretString)
+
+-----
+
+Express Middleware
+
+Add a header in request as follows(in postman): 
+Key: Authorization
+Value: Bearer <token>
+
+get request header by: 
+req.header('headerName')
