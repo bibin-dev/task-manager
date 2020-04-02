@@ -83,7 +83,17 @@ router.patch('/updateTaskById/:id', async (req, res) => {
     }
 
     try {
-        const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        // new way - first find and then save relevant fields
+        // ensures middleware runs
+        const task = await Task.findById(req.params.id)
+        updateArr.forEach((update) => {
+            task[update] = req.body[update]
+        })
+
+        await task.save()
+
+        // commented out - use this for a one step process without middleware
+        // const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
 
         if (!task)
             return res.status(401).send()
