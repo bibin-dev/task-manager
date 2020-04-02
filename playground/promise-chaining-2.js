@@ -12,14 +12,14 @@ const Task = require('../src/models/task')
 // })
 
 // modifying above function for async-await
-const findAndDelete = async (id) => {
+const deleteTaskAndCount = async (id) => {
     const task = await Task.findByIdAndDelete(id)
     const incompleteCount = await Task.countDocuments({ completed: false })
 
     return { task, incompleteCount }
 }
 
-findAndDelete('5e844dac570f5f40b1d3759a').then((result) => {
+deleteTaskAndCount('5e844dac570f5f40b1d3759a').then((result) => {
     console.log('Deleted Task: \n' + result.task)
     console.log('Incomplete tasks: ' + result.incompleteCount)
 }).catch((e) => {
