@@ -26,3 +26,12 @@ READ API with a GET method to /tasks/:id (for specific task with the specified I
 UPDATE API with a PATCH method to /tasks/:id
 
 DELETE API with a DELETE method to /tasks/:id
+
+-----
+
+bcrypt.js - tool for password encryption
+Hash password using bcrypt.hash(passwordString, hashCount)
+the hashCount can be set to 8
+
+compare if a password matches with the hashed value using 
+bcrypt.compare(passwordString, hashedPasswordString)

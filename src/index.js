@@ -19,3 +19,14 @@ app.listen(port, () => {
     console.log('server is up on port ' + port)
 })
 
+const bcrypt = require('bcrypt')
+
+const myFunction = async () => {
+    const password = 'Bibin@1992'
+    const hashedPassword = await bcrypt.hash(password, 8)
+
+    const isMatch = await bcrypt.compare(password, hashedPassword) 
+    console.log(isMatch)
+}
+
+myFunction()
