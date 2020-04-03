@@ -71,3 +71,21 @@ Value: Bearer <token>
 
 get request header by: 
 req.header('headerName')
+
+-----
+
+Postman Advanced
+~~
+
+Process to add a global URL, and authToken 
+
+1. Add universal environment by clicking the gear icon, and adding an environment
+2. Add url as a key with value equal to localhost (or prod url whenever available)
+3. Edit your collection, go to Authorization tab, choose Bearer token, and set it equal to {{authToken}}
+4. in login user service call, go to Tests tab, and add following script: 
+(this executes after the service call is done)
+if (pm.response.code === 200) {
+    pm.environment.set('authToken', pm.response.json().token)
+}
+
+This will set the authToken defined earlier to the value retrieved on login
