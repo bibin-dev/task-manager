@@ -116,7 +116,8 @@ router.get('/users/:id', async (req, res) => {
 })
 
 // update user by ID
-router.patch('/updateUserById/:id', async (req, res) => {
+// Bibin - 6th April - refractoring code to include auth
+router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password', 'age'] //allowed update fields
     
@@ -132,33 +133,23 @@ router.patch('/updateUserById/:id', async (req, res) => {
     }
 
     try {
-        const user = await User.findById(req.params.id)
-
-        // adjustment for middleware to run
         updates.forEach((update) => {
-            user[update] = req.body[update]
+            req.user[update] = req.body[update]
         })
-        await user.save()
-        // const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true })
+        await req.user.save()
 
-        if (!user) 
-            return res.status(404).send()
-
-        res.status(201).send(user)
+        res.status(201).send(req.user)
     } catch (error) {
         res.status(400).send(error)
     }
 })
 
 // delete user by ID
-router.delete('/deleteUserById/:id', async (req, res) => {
+// Bibin - 6th April - refractoring code to include auth
+router.delete('/users/me', auth, async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id)
-
-        if (!user) 
-            return res.status(404).send()
-        
-        res.status(201).send(user)
+        await req.user.remove()
+        res.send(req.user)
     } catch (error) {
         res.status(500).send(error)
     }
