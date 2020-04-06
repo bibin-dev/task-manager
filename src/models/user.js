@@ -46,6 +46,13 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+// virtual field
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 // method that eliminates user password and tokens whenever send() is called
 userSchema.methods.toJSON = function () {
     const user = this

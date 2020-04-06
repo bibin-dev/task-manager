@@ -33,14 +33,14 @@ app.listen(port, () => {
     console.log('server is up on port ' + port)
 })
 
-// const bcrypt = require('bcrypt')
+// const main = async () => {
+//     // const task = await Task.findById('5e8b03d5736e48635fcc84ed')
+//     // await task.populate('owner').execPopulate()
+//     // console.log(task.owner)
 
-// const myFunction = async () => {
-//     const token = jwt.sign({ _id: 'abc12345' }, 'this is my new course', { expiresIn: '7 days' })
-//     console.log(token)
-
-//     const data = jwt.verify(token, 'this is my new course')
-//     console.log(data)
+//     const user = await User.findById('5e8af1593c223d630600400a')
+//     await user.populate('tasks').execPopulate()
+//     console.log(user.tasks)
 // }
 
-// myFunction()
+// main()
