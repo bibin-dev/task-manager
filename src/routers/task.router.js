@@ -25,14 +25,22 @@ router.post('/tasks', auth, async (req, res) => {
 })
 
 // fetch all tasks
-router.get('/tasks', async (req, res) => {
+// UPDATE - return only tasks of the owner (logged in user)
+router.get('/tasks', auth, async (req, res) => {
     try {
-        const tasks = await Task.find({})
+        const tasks = await Task.find({ owner: req.user._id })
 
+        // UPDATE - can also use the following commented 2 code lines
+        // await req.user.populate('tasks').execPopulate()
+        // res.send(req.user.tasks)
+
+        //comment the IF condition and send() if above 2 lines are used
         if (!tasks)
-            return res.status(404).send()
+            return res.status(404).send({
+                error: 'tasks not found'
+            })
 
-        res.status(201).send(tasks)
+        res.send(tasks)
     } catch (error) {
         res.status(500).send(error)
     }
@@ -48,16 +56,19 @@ router.get('/tasks', async (req, res) => {
 })
 
 // fetch task by ID
-router.get('/tasks/:id', async (req, res) => {
+// Bibin - 6th April = add auth to the endpoint
+router.get('/tasks/:id', auth, async (req, res) => {
     const _id = req.params.id
 
     try {
-        const task = await Task.findById(_id)
-
+        //const task = await Task.findById(_id)
+        const task = await Task.findOne({ _id, owner: req.user._id })
         if (!task)
-            return res.status(404).send()
+            return res.status(404).send({
+                error: 'No Task Found'
+            })
 
-        res.status(201).send(task)
+        res.send(task)
     } catch (error) {
         res.status(500).send(error)
     }
@@ -72,7 +83,8 @@ router.get('/tasks/:id', async (req, res) => {
 })
 
 // update task by ID
-router.patch('/updateTaskById/:id', async (req, res) => {
+// UPDATED for auth
+router.patch('/tasks/:id', auth, async (req, res) => {
     const allowedUpdates = ['description', 'completed']
     const updateArr = Object.keys(req.body)
 
@@ -89,7 +101,12 @@ router.patch('/updateTaskById/:id', async (req, res) => {
     try {
         // new way - first find and then save relevant fields
         // ensures middleware runs
-        const task = await Task.findById(req.params.id)
+        // changed function to include owner details
+        const task = await Task.findOne({ _id: req.params.id, owner: req.user._id })
+        
+        if (!task)
+            return res.status(401).send()
+
         updateArr.forEach((update) => {
             task[update] = req.body[update]
         })
@@ -99,8 +116,7 @@ router.patch('/updateTaskById/:id', async (req, res) => {
         // commented out - use this for a one step process without middleware
         // const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
 
-        if (!task)
-            return res.status(401).send()
+        
 
         res.status(201).send(task)
     } catch (error) {
@@ -109,14 +125,16 @@ router.patch('/updateTaskById/:id', async (req, res) => {
 })
 
 // delete task by ID
-router.delete('/deleteTaskById/:id', async (req, res) => {
+// UPDATED for auth
+router.delete('/tasks/:id', auth, async (req, res) => {
     try {
-        const task = await Task.findByIdAndDelete(req.params.id)
+        // changed function to include owner details
+        const task = await Task.findOneAndDelete({ _id: req.params.id, owner: req.user._id })
 
         if (!task) 
             return res.status(404).send()
 
-        res.status(201).send(task)
+        res.send(task)
     } catch (error) {
         res.status(500).send(error)
     }
