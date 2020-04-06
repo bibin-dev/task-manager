@@ -49,6 +49,30 @@ router.get('/users/me', auth, async (req, res) => {
     // })
 })
 
+// logging out of current session
+router.post('/users/logout', auth, async (req, res) => {
+    try {
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token !== req.token
+        })
+        await req.user.save()
+        res.send()
+    } catch (error) {
+        res.status(500).send()
+    }
+})
+
+// logging out of all sessions
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = []
+        await req.user.save()
+        res.send()
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
 // fetch all users (will call only if the auth middleware)
 router.get('/users', auth, async (req, res) => {
     try{

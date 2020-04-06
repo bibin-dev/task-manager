@@ -46,6 +46,16 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+// method that eliminates user password and tokens whenever send() is called
+userSchema.methods.toJSON = function () {
+    const user = this
+    const userObj = user.toObject()
+
+    delete userObj.password
+    delete userObj.tokens
+    return userObj
+}
+
 // method to generate token (JWT)
 userSchema.methods.generateAuthToken = async function () {
     const user = this
