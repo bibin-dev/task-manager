@@ -45,6 +45,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+}, {
+    timestamps: true // gives us createdAt and updatedAt fields
 })
 
 // virtual field
