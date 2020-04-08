@@ -29,15 +29,23 @@ router.post('/tasks', auth, async (req, res) => {
 // UPDATE - Bibin 8th April - GET /tasks?completed=true
 // UPDATE - adding pagination GET /tasks?limit=10&skip=10
 // skip is generally used to skip over the mentioned number of results
+// SORT functionlity added (/tasks?sortBy=createdAt:desc)
 router.get('/tasks', auth, async (req, res) => {
     try {
         const match = {}
-
+        //variable for SORT functionality
+        const sort = {} 
         //checking if completed param has been provided in the query string
         if (req.query.completed)
             match.completed = req.query.completed
         // commenting the following line for now
         // const tasks = await Task.find({ owner: req.user._id })
+
+        // sort param assignment
+        if (req.query.sortBy) {
+            const sortParam = req.query.sortBy.split(':')
+            sort[sortParam[0]] = sortParam[1] === 'desc' ? -1 : 1
+        }
 
         // UPDATE - can also use the following commented 2 code lines
         await req.user.populate({
@@ -45,7 +53,12 @@ router.get('/tasks', auth, async (req, res) => {
             match,
             options: {
                 limit: parseInt(req.query.limit),
-                skip: parseInt(req.query.skip)
+                skip: parseInt(req.query.skip),
+                // sort: {
+                //     // createdAt: -1, // 1 for ASC, -1 for DESC
+                //     completed: 1
+                // }
+                sort
             }
         }).execPopulate()
         res.send(req.user.tasks)
