@@ -26,21 +26,37 @@ router.post('/tasks', auth, async (req, res) => {
 
 // fetch all tasks
 // UPDATE - return only tasks of the owner (logged in user)
+// UPDATE - Bibin 8th April - GET /tasks?completed=true
+// UPDATE - adding pagination GET /tasks?limit=10&skip=10
+// skip is generally used to skip over the mentioned number of results
 router.get('/tasks', auth, async (req, res) => {
     try {
-        const tasks = await Task.find({ owner: req.user._id })
+        const match = {}
+
+        //checking if completed param has been provided in the query string
+        if (req.query.completed)
+            match.completed = req.query.completed
+        // commenting the following line for now
+        // const tasks = await Task.find({ owner: req.user._id })
 
         // UPDATE - can also use the following commented 2 code lines
-        // await req.user.populate('tasks').execPopulate()
-        // res.send(req.user.tasks)
+        await req.user.populate({
+            path: 'tasks',
+            match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip)
+            }
+        }).execPopulate()
+        res.send(req.user.tasks)
 
         //comment the IF condition and send() if above 2 lines are used
-        if (!tasks)
-            return res.status(404).send({
-                error: 'tasks not found'
-            })
+        // if (!tasks)
+        //     return res.status(404).send({
+        //         error: 'tasks not found'
+        //     })
 
-        res.send(tasks)
+        // res.send(tasks)
     } catch (error) {
         res.status(500).send(error)
     }
