@@ -1,13 +1,35 @@
 const express = require('express')
 require('./db/mongoose')
-const User = require('./models/user')
-const Task = require('./models/task')
 const userRouter = require('./routers/user.router')
 const taskRouter = require('./routers/task.router')
-const jwt = require('jsonwebtoken')
 
 const app = express()
 const port = process.env.PORT || 3000
+
+// sample code for file upload
+const multer = require('multer')
+const upload = multer({
+    dest: 'images',
+    limits: {
+        fileSize: 1000000 //max file size defined in bytes
+    },
+    fileFilter (req, file, cb) {
+        if (!file.originalname.match(/\.(doc|docx)$/))
+            return cb(new Error('File must be a doc or docx'))
+        
+        cb(undefined, true)
+        
+        // types of callback
+        // cb(new Error('File must be a PDF'))
+        // cb(undefined, true) // no error and upload file
+        // cb(undefined, false) // no error and reject upload - DON'T USE !! 
+    }
+})
+
+app.post('/upload', upload.single('upload'), (req, res) => {
+    res.send()
+})
+
 
 // Express middleware function
 // app.use((req, res, next) => {
